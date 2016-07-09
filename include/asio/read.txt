@@ -1,0 +1,7 @@
+config.hpp
+
+#define ASIO_STANDALONE
+#define ASIO_HAS_STD_ARRAY
+#define ASIO_HAS_STD_TYPE_TRAITS
+#define ASIO_HAS_STD_SHARED_PTR
+

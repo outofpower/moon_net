@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  
+  <module>
+    <type>GateModule</type>
+    <name>gate</name>
+    <network>
+      <ip>127.0.0.1</ip>
+      <port>11111</port>
+      <net_thread_num>2</net_thread_num>
+    </network>
+  </module>
+
+  <module>
+    <type>LoginModule</type>
+    <name>login</name>
+  </module>
+
+  <module>
+    <type>WorldModule</type>
+    <name>world</name>
+  </module>
+
+  <module>
+    <type>SceneModule</type>
+    <name>scene0</name>
+  </module>
+  
+</config>
+

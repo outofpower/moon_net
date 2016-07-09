@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{5dd0f4a2-c10b-4f13-b4d6-869190eb5023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{90a9467e-de9e-4ccc-8b93-8a76b45a3641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\GateModule">
+      <UniqueIdentifier>{b248595d-9409-4491-b3ee-a292d4bbbe4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\GateModule\Data">
+      <UniqueIdentifier>{6581bd13-d03b-460b-9fa2-e43e274c37e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\GateModule\MessageHandler">
+      <UniqueIdentifier>{b33c39d6-67b7-4b01-8544-e03b86c5a532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessageDefine">
+      <UniqueIdentifier>{958b6cc9-166a-4305-9283-3b2848f56ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\LoginModule">
+      <UniqueIdentifier>{c21577a3-e63c-4445-af56-174a5b2b4445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\LoginModule\MessageHandler">
+      <UniqueIdentifier>{706aa8f3-afde-47fa-b7b2-086d1da88201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\LoginModule\Data">
+      <UniqueIdentifier>{f6cb0119-5a83-4efa-93b3-c7b477b5fcf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{cf34b287-9b3e-4bc7-a3f3-b7a86692f0c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="example.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate\GateLoginHandler.cpp">
+      <Filter>Logic\GateModule\MessageHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate\GateModuleHandler.cpp">
+      <Filter>Logic\GateModule\MessageHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate\GateModule.cpp">
+      <Filter>Logic\GateModule</Filter>
+    </ClCompile>
+    <ClCompile Include="message_define\MsgLogin.pb.cc">
+      <Filter>MessageDefine</Filter>
+    </ClCompile>
+    <ClCompile Include="message_define\MsgUserInfo.pb.cc">
+      <Filter>MessageDefine</Filter>
+    </ClCompile>
+    <ClCompile Include="Login\LoginHandler.cpp">
+      <Filter>Logic\LoginModule\MessageHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Login\LoginModuleHandler.cpp">
+      <Filter>Logic\LoginModule\MessageHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Login\AccountDataCache.cpp">
+      <Filter>Logic\LoginModule\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Login\LoginModule.cpp">
+      <Filter>Logic\LoginModule</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBases.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServerDefine.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate\Connection.h">
+      <Filter>Logic\GateModule\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate\LoginData.h">
+      <Filter>Logic\GateModule\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate\GateLoginHandler.h">
+      <Filter>Logic\GateModule\MessageHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate\GateModuleHandler.h">
+      <Filter>Logic\GateModule\MessageHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate\GateModule.h">
+      <Filter>Logic\GateModule</Filter>
+    </ClInclude>
+    <ClInclude Include="message_define\MsgLogin.pb.h">
+      <Filter>MessageDefine</Filter>
+    </ClInclude>
+    <ClInclude Include="message_define\MsgUserInfo.pb.h">
+      <Filter>MessageDefine</Filter>
+    </ClInclude>
+    <ClInclude Include="Login\LoginHandler.h">
+      <Filter>Logic\LoginModule\MessageHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Login\LoginModuleHandler.h">
+      <Filter>Logic\LoginModule\MessageHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Login\AccountDataCache.h">
+      <Filter>Logic\LoginModule\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Login\LoginModule.h">
+      <Filter>Logic\LoginModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageID.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBases.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBehaviour.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializeUtil.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerLog.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
