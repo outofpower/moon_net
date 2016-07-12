@@ -138,7 +138,7 @@
     <ClInclude Include="aes\AesHelper.hpp" />
     <ClInclude Include="any.hpp" />
     <ClInclude Include="binary.hpp" />
-    <ClInclude Include="blocking_queue.hpp" />
+    <ClInclude Include="sync_queue.hpp" />
     <ClInclude Include="buffer.hpp" />
     <ClInclude Include="delegate.hpp" />
     <ClInclude Include="file.hpp" />

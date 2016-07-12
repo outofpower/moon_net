@@ -58,7 +58,7 @@ int main()
 {
 	{
 		ServerLog log;
-		log.Init(".\\logs\\");
+		log.Init(".\\");
 
 		server_config svr;
 		svr.load("server_config.xml");

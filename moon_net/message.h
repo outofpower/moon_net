@@ -74,6 +74,9 @@ namespace moon
 		*/
 		void							set_userdata(uint8_t* data, size_t size) const;
 	
+		/**
+		* 获取用户自定义数据
+		*/
 		const uint8_t*			get_userdata(size_t size) const;
 	
 		/**
@@ -92,10 +95,13 @@ namespace moon
 		size_t						size() const;
 
 		/**
-		* 设置消息类型
+		* 设置消息类型，参见 EMessageType
 		*/
 		void							set_type(EMessageType type);
 
+		/**
+		* 获取消息类型，参见 EMessageType
+		*/
 		EMessageType			get_type() const;
 	protected:
 		class Imp;

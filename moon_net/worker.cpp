@@ -134,31 +134,35 @@ namespace moon
 		_worker_id = id;
 	}
 
+	//消息处理
 	void worker::update(uint32_t interval)
 	{
 		m_timerpool.update();
 
 		_timer += interval;
 		auto t1 = time::millsecond();
+		//1.处理投递的异步事件
 		update_events();
 		auto t2 = time::millsecond();
+		//2.更新各个actors
 		for (auto& act : _actors)
 		{
 			act.second->update(interval);
-
+			//如果actor的消息队列长度 大于0，则把改actor保存到消息处理队列
 			if (act.second->get_mq_size() != 0)
 			{
 				_actors_queue.push_back(act.second.get());
 			}	
 		}
 		auto t3 = time::millsecond();
+		//3.循环遍历消息处理队列
 		while (_actors_queue.size() != 0)
 		{
 			auto act = _actors_queue.front();
 			_actors_queue.pop_front();
 
 			_msg_counter++;
-
+			//如果该actor还有消息未处理，则把这个actor插到队尾
 			if (act->peek_message())
 			{		
 				_actors_queue.push_back(act);

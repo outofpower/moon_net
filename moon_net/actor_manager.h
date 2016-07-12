@@ -135,8 +135,8 @@ namespace moon
 		uint16_t	incID = _actorIncID.fetch_add(1);
 		uint8_t		workerID = get_next_worker();
 		uint32_t	actorID = 0;
-		actorID |= (uint32_t(_machine_id) << 24);
-		actorID |= (uint32_t(workerID) << 16);
+		actorID |= (uint32_t(_machine_id) << 24);//actor ID 的 32-25 bit保存machineID
+		actorID |= (uint32_t(workerID) << 16);//actor ID 的 24-17 bit保存workerID
 		actorID |= (incID);
 
 		auto act = std::make_shared<TActor>(module_id::create(actorID));

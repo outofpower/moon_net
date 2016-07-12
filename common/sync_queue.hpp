@@ -23,36 +23,72 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #pragma once
-#include "service.h"
+#include <mutex>
+#include <condition_variable>
+#include <deque>
+#include <cassert>
 
-MOON_BEGIN
-
-class service_pool 
+namespace moon
 {
-public:
-	service_pool(uint8_t pool_size);
-	~service_pool(void);
+	template<class T,size_t max_size = 50>
+	class sync_queue
+	{
+	public:
+		sync_queue()
+			:m_exit(false)
+		{
+		}
 
-	void run();
+		sync_queue(const sync_queue& t) = delete;
+		sync_queue& operator=(const sync_queue& t) = delete;
 
-	void stop();
+		void push_back(const T& x)
+		{
+			std::unique_lock<std::mutex> lck(_mutex);
 
-	void	send(socket_id sockid, const buffer_ptr& data);
+			m_notFull.wait(lck, [this] {return m_exit || (_queue.size() < max_size); });
 
-	void	close_socket(socket_id sockid, ESocketState state);
+			_queue.push_back(x);
+		}
 
-	service& get_service();
-	asio::io_service& get_Ioservice();
-	std::unordered_map<uint8_t, service_ptr>& GetAllService() { return _services; }
+		void emplace_back(T&& v)
+		{
+			std::unique_lock<std::mutex> lck(_mutex);
+			_queue.emplace_back(std::forward<T>(v));
+		}
 
-private:
-	std::unordered_map<uint8_t, service_ptr>	_services;
-	// The next service to use for a connection.
-	uint8_t															_nextservice;
-	std::vector<std::shared_ptr<std::thread>>	_threads;
-};
+		T pop_front()
+		{
+			std::unique_lock<std::mutex> lck(_mutex);
+			if(_queue.empty())
+			{
+				return T();
+			}
+			assert(!_queue.empty());
+			T t(_queue.front());
+			_queue.pop_front();
+			return t;
+		}
 
-MOON_END
+		size_t size()
+		{
+			std::unique_lock<std::mutex> lck(_mutex);
+			return _queue.size();
+		}
 
+		std::deque<T> move()
+		{
+			std::unique_lock<std::mutex> lck(_mutex);
+			auto tmp = std::move(_queue);
+			m_notFull.notify_one();
+			return std::move(tmp);
+		}
 
+	private:
+		std::mutex			_mutex;
+		std::condition_variable m_notFull;
+		std::deque<T>		_queue;
+		bool						m_exit;
+	};
 
+}

@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "broker.h"
-#include <common/blocking_queue.hpp>
+#include <common/sync_queue.hpp>
 #include "message.h"
 #include "tcp_frame.h"
 
@@ -37,7 +37,7 @@ namespace moon
 
 		}
 
-		blocking_queue<message>													_net_msg;
+		sync_queue<message>													_net_msg;
 		tcp_frame																				_net;
 	};
 
@@ -89,7 +89,7 @@ namespace moon
 
 	void broker::update(uint32_t interval)
 	{
-		auto msgs = _Imp->_net_msg.Move();
+		auto msgs = _Imp->_net_msg.move();
 		for (auto& msg : msgs)
 		{
 			add_message(msg);

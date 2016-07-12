@@ -66,6 +66,9 @@ namespace moon
 
 		}
 
+		buffer(const buffer& t) = delete;
+		buffer& operator=(const buffer& t) = delete;
+
 		static buffer_ptr create(size_t size, size_t headreserved = 0)
 		{
 			return std::make_shared<buffer>(size, headreserved);

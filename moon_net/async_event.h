@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 #include <functional>
-#include <common/blocking_queue.hpp>
+#include <common/sync_queue.hpp>
 namespace moon
 {
 	using event_handle = std::function<void()>;
@@ -42,7 +42,7 @@ namespace moon
 		{
 			if (_events.size() == 0)
 				return;
-			auto evts = _events.Move();
+			auto evts = _events.move();
 			for (auto& e : evts)
 			{
 				e();
@@ -50,6 +50,6 @@ namespace moon
 		}
 
 	protected:
-		blocking_queue<event_handle> _events;
+		sync_queue<event_handle> _events;
 	};
 };

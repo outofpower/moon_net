@@ -29,7 +29,8 @@ namespace moon
 	class actor_manager;
 
 	/**
-	* actor的基类.
+	* actor的基类.同一个actor内的所有操作都是线程安全的，
+	* 不用actor间的通信可以通过发送消息
 	*/
 	class actor:noncopyable
 	{

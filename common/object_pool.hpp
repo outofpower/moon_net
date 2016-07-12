@@ -56,6 +56,9 @@ public:
 		}
 	};
 
+	object_pool(const object_pool& t) = delete;
+	object_pool& operator=(const object_pool& t) = delete;
+
 	template<class... Args>
 	std::shared_ptr<T> create(Args... args)
 	{

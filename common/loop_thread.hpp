@@ -43,6 +43,9 @@ namespace moon
 
 		}
 
+		loop_thread(const loop_thread& t) = delete;
+		loop_thread& operator=(const loop_thread& t) = delete;
+
 		//…Ë÷√—≠ª∑º‰∏Ù ∫¡√Î
 		void set_interval(uint32_t interval)
 		{

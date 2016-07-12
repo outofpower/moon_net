@@ -85,6 +85,7 @@ namespace moon
 	private:
 		uint8_t																_worker_id;
 		std::unordered_map<module_id, actor_ptr>	_actors;
+		//消息处理队列
 		std::deque<actor*>											_actors_queue;
 		actor_manager*												_mgr;
 

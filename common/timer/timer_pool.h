@@ -73,7 +73,7 @@ namespace moon
 		*/
 		void remove(uint32_t timerid);
 		
-		//主逻辑需要调用这个函数，驱动计时器
+		//逻辑线程需要调用这个函数，驱动计时器
 		void update();
 
 		void stopAllTimer();

@@ -25,9 +25,6 @@
     <ClInclude Include="binary.hpp">
       <Filter>code</Filter>
     </ClInclude>
-    <ClInclude Include="blocking_queue.hpp">
-      <Filter>code</Filter>
-    </ClInclude>
     <ClInclude Include="buffer.hpp">
       <Filter>code</Filter>
     </ClInclude>
@@ -84,6 +81,9 @@
     </ClInclude>
     <ClInclude Include="aes\AesHelper.hpp">
       <Filter>code\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="sync_queue.hpp">
+      <Filter>code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

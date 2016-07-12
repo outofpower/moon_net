@@ -5,6 +5,14 @@
 *.obj
 *.sdf
 *.opensdf
+*.opendb
+*.tlog
+*.log
+*.idb
+*.pdb
+*.txt
+*.ilk
+*.db
 
 # Precompiled Headers
 *.gch
