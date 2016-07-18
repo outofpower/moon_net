@@ -85,34 +85,23 @@ namespace string_utils
 		return s;
 	}
 
-	inline std::string to_string(int32_t v)
+	template<typename T>
+	std::string to_string(T t,typename std::enable_if<std::is_integral<T>::value>::type* = nullptr)
 	{
-		return std::to_string(int64_t(v));
+		if (std::is_signed<T>::value)
+		{
+			return std::to_string(int64_t(t));
+		}
+		else
+		{
+			return std::to_string(uint64_t(t));
+		}
 	}
 
-	inline std::string to_string(int64_t v)
+	template<typename T>
+	std::string to_string(T t, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr)
 	{
-		return std::to_string(v);
-	}
-
-	inline std::string to_string(uint32_t v)
-	{
-		return std::to_string(uint64_t(v));
-	}
-
-	inline std::string to_string(uint64_t v)
-	{
-		return std::to_string(v);
-	}
-
-	inline std::string to_string(float v)
-	{
-		return std::to_string(long double(v));
-	}
-
-	inline std::string to_string(double v)
-	{
-		return std::to_string(long double(v));
+		return std::to_string(long double(t));
 	}
 
 	/*
