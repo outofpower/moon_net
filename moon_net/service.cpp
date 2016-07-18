@@ -33,7 +33,10 @@ service::service()
 
 service::~service(void)
 {
-
+	for (auto& sock : _sockets)
+	{
+		sock.second->close(ESocketState::Ok);
+	}
 }
 
 asio::io_service& service::get_ioservice()

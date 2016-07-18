@@ -70,17 +70,13 @@ namespace moon
 	void socket::close(ESocketState  state)
 	{
 		console()->info("socket address[{0}] forced closed, state[{1:d}]", get_remoteaddress().c_str(), (int)state);
-		_service.get_ioservice().post([this, state]
+		_state = state;
+		//所有异步处理将会立刻调用，并触发 asio::error::operation_aborted
+		if (_socket.is_open())
 		{
-			_state = state;
-			//所有异步处理将会立刻调用，并触发 asio::error::operation_aborted
-			if (_socket.is_open())
-			{
-				_socket.shutdown(asio::ip::tcp::socket::shutdown_both,_errorCode);
-				_socket.close(_errorCode);
-			}
-		});
-	
+			_socket.shutdown(asio::ip::tcp::socket::shutdown_both, _errorCode);
+			_socket.close(_errorCode);
+		}
 	}
 
 	void socket::postRead()
