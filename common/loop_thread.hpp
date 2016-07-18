@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include <cstdint>
 #include <chrono>
 #include <thread>
+#include <atomic>
 
 namespace moon
 {
@@ -91,8 +92,8 @@ namespace moon
 		}
 
 	private:
-		uint32_t			_Interval;
-		std::thread		_Thread;
-		bool					_bStop;
+		uint32_t						_Interval;
+		std::thread					_Thread;
+		std::atomic_bool 			_bStop;
 	};
 }
