@@ -33,7 +33,7 @@ namespace moon
 	class actor_manager;
 
 	//工作线程
-	class worker:public loop_thread,public async_event
+	class worker:public loop_thread,public async_event, noncopyable
 	{
 	public:
 		worker(actor_manager* mgr);

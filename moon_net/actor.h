@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #pragma once
 #include "actor_define.h"
-#include <common/noncopyable.hpp>
+
 namespace moon
 {
 	class actor_manager;
@@ -40,7 +40,7 @@ namespace moon
 		/**
 		* 构造函数
 		*
-		* @id 一个唯一的ID,默认是个累加值.
+		* @id 模块标识(32位整型)： 32-25 machine id, 24-17 workerID, 15-1 一个累加值
 		*/
 		actor(module_id id);
 

@@ -28,7 +28,7 @@ THE SOFTWARE.
 namespace moon
 {
 	//actor 管理类，负责actor的创建，调度，移除
-	class actor_manager
+	class actor_manager:noncopyable
 	{
 	public:
 		actor_manager();

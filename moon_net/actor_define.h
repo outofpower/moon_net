@@ -25,6 +25,8 @@ THE SOFTWARE.
 #pragma once
 #include <common/moon_define.hpp>
 #include <common/timer/timer_pool.h>
+#include <common/noncopyable.hpp>
+
 #include "buffer.h"
 #include "socket_id.h"
 #include "module_id.h"

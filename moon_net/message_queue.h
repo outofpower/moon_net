@@ -29,7 +29,7 @@ namespace moon
 {
 	//actor消息队列
 	template<class TMsg>
-	class message_queue
+	class message_queue:noncopyable
 	{
 	public:
 		/**

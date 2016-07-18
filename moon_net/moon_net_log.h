@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 namespace moon
 {
-	class moon_net_log :public singleton<moon_net_log>
+	class moon_net_log :public singleton<moon_net_log>,noncopyable
 	{
 	public:
 		moon_net_log()
