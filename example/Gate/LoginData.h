@@ -23,8 +23,8 @@ public:
 class LoginModelManager:public ModuleBehaviour
 {
 public:
-	LoginModelManager(ModuleBases& module)
-		: ModuleBehaviour(module), _login_inc_serial_num(0)
+	LoginModelManager()
+		:_login_inc_serial_num(0)
 	{
 
 	}

@@ -2,12 +2,15 @@
 #include "ServerDefine.h"
 #include "Component.h"
 class ModuleBases;
-class ModuleBehaviour
+class ModuleBehaviour :noncopyable
 {
 public:
-	ModuleBehaviour(ModuleBases& module)
-		:m_module(module)
+	friend class ModuleBases;
+
+	ModuleBehaviour()
+		:m_module(nullptr)
 	{
+
 	}
 
 	virtual ~ModuleBehaviour()
@@ -41,11 +44,23 @@ public:
 	template<class TComponent>
 	TComponent* GetComponent(const std::string& name);
 
-	ModuleBases& thisModule(){return m_module;}
-private:
-	ModuleBases&													m_module;
-	std::string																 m_name;
 
+
+	ModuleBases& thisModule()
+	{
+		return *m_module;
+	}
+
+protected:
+	void SetModule(ModuleBases* module)
+	{
+		assert(nullptr != module);
+		m_module = module;
+	}
+
+private:
+	ModuleBases*														 m_module;
+	std::string																 m_name;
 	std::unordered_map<std::string, Component*> m_Components;
 };
 
@@ -53,20 +68,21 @@ private:
 template<class TComponent>
 inline TComponent * ModuleBehaviour::AddComponent(const std::string & name)
 {
-	auto iter = m_Components.emplace(name, new TComponent());
-	assert(iter.second&&"The component is already exist!");
-	auto& t = iter.first->second;
-	t->SetName(name);
-	t->SetOwner(this);
-	t->SetModule(m_module);
-	if (t->Init())
+	auto t = new TComponent();
+	do
 	{
-		return dynamic_cast<TComponent*>(t);
-	}
-	else
-	{
-		return nullptr;
-	}
+		BREAK_IF(t == nullptr);
+		t->SetModule(m_module);
+		t->SetName(name);
+		t->SetOwner(this);
+		BREAK_IF(!t->Init());
+		auto iter = m_Components.emplace(name, t);
+		assert(iter.second&&"The component is already exist!");
+		BREAK_IF(!iter.second);
+		return t;
+	} while (0);
+	SAFE_DELETE(t);
+	return nullptr;
 }
 
 

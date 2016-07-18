@@ -4,7 +4,7 @@
 #include "LoginHandler.h"
 
 LoginModule::LoginModule(module_id moduleid)
-	:actor(moduleid),ModuleBases(this)
+	:actor(moduleid),ModuleBases(this), m_Accounts(nullptr)
 {
 
 }
@@ -32,7 +32,7 @@ void LoginModule::on_enter()
 
 void LoginModule::on_exit()
 {
-	
+	Log.console("LoginModule Exit");
 }
 
 void LoginModule::handle_message(const message& msg)

@@ -1,11 +1,9 @@
 #include "LoginModuleHandler.h"
 #include "LoginModule.h"
 
-LoginModuleHandler::LoginModuleHandler(ModuleBases& module)
-	:ModuleBehaviour(module)
+LoginModuleHandler::LoginModuleHandler()
 {
 }
-
 
 LoginModuleHandler::~LoginModuleHandler()
 {

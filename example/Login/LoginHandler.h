@@ -6,7 +6,7 @@ class AccountDataCache;
 class LoginHandler:public ModuleBehaviour
 {
 public:
-	LoginHandler(ModuleBases& module);
+	LoginHandler();
 	~LoginHandler(void);
 
 	bool Init() override;

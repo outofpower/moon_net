@@ -13,7 +13,7 @@ struct AccountData
 class AccountDataCache:public ModuleBehaviour
 {
 public:
-	AccountDataCache(ModuleBases& module);
+	AccountDataCache();
 	~AccountDataCache(void);
 
 	bool Init() override;

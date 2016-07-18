@@ -31,8 +31,7 @@ public:
 class ConnectionManager:public ModuleBehaviour
 {
 public:
-	ConnectionManager(ModuleBases& module)
-		:ModuleBehaviour(module)
+	ConnectionManager()
 	{
 
 	}

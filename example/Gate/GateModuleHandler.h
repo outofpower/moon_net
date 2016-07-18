@@ -5,7 +5,7 @@
 class GateModuleHandler :public ModuleBehaviour
 {
 public:
-	GateModuleHandler(ModuleBases& module);
+	GateModuleHandler();
 	~GateModuleHandler();
 
 	bool Init() override;

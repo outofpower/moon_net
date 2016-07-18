@@ -1,7 +1,6 @@
 #include "AccountDataCache.h"
 
-AccountDataCache::AccountDataCache(ModuleBases& module)
-	:ModuleBehaviour(module)
+AccountDataCache::AccountDataCache()
 {
 }
 

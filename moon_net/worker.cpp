@@ -172,7 +172,7 @@ namespace moon
 
 		assert(_actors_queue.size() == 0);
 
-		if (_timer > 1000)
+		if (_timer > 3000)
 		{
 			_fps = _msg_counter;
 			_msg_counter = 0;

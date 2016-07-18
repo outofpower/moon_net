@@ -188,6 +188,9 @@
       <Project>{49ea010d-706f-4be2-a397-77854b72a040}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Debug\server_config.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

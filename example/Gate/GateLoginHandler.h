@@ -7,7 +7,7 @@ class GateModule;
 class GateLoginHandler :public ModuleBehaviour
 {
 public:
-	GateLoginHandler(ModuleBases& module);
+	GateLoginHandler();
 
 	~GateLoginHandler();
 

@@ -1,8 +1,7 @@
 #include "GateModuleHandler.h"
 #include "GateModule.h"
 
-GateModuleHandler::GateModuleHandler(ModuleBases& module)
-	:ModuleBehaviour(module)
+GateModuleHandler::GateModuleHandler()
 {
 }
 

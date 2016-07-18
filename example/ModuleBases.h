@@ -81,18 +81,17 @@ inline T ModuleBases::get_userdata(const message & msg)
 template<class TModuleBehaviour>
 inline TModuleBehaviour * ModuleBases::AddModuleBehaviour()
 {
-	auto t = new TModuleBehaviour(*this);
+	auto t = new TModuleBehaviour();
 	do 
 	{	
-		BREAK_IF(t == nullptr || !t->Init());
-		if (t != nullptr && t->Init())
-		{
-			auto name = typeid(TModuleBehaviour).name();
-			t->SetName(name);
-			auto iter = m_ModuleBehaviours.emplace(name, t);
-			BREAK_IF(!iter.second);
-			return t;
-		}
+		BREAK_IF(t == nullptr);
+		t->SetModule(this);
+		BREAK_IF(!t->Init());	
+		auto name = typeid(TModuleBehaviour).name();
+		t->SetName(name);
+		auto iter = m_ModuleBehaviours.emplace(name, t);
+		BREAK_IF(!iter.second);
+		return t;
 	} while (0);
 	SAFE_DELETE(t);
 	return nullptr;

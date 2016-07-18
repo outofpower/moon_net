@@ -4,7 +4,7 @@
 class LoginModuleHandler :public ModuleBehaviour
 {
 public:
-	LoginModuleHandler(ModuleBases& module);
+	LoginModuleHandler();
 	~LoginModuleHandler();
 
 	bool Init() override;

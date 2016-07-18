@@ -168,13 +168,12 @@ void GateModule::ClientData(const message& msg)
 	}
 	else
 	{
+		//否则发送给 world 模块
 		if (m_WorldModule == 0)
 		{
 			m_WorldModule = GetOtherModule("world");
-			assert(m_WorldModule != 0);
+			//assert(m_WorldModule != 0);
 		}
-
-		//否则发送给 world 模块
 	}
 }
 

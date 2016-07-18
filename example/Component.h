@@ -4,7 +4,7 @@
 class ModuleBehaviour;
 class ModuleBases;
 
-class Component
+class Component :noncopyable
 {
 public:
 	Component()
@@ -13,16 +13,15 @@ public:
 	virtual ~Component(){};
 
 	const std::string& GetName() { return m_name; }
-	void SetName(const std::string& name) { m_name = name; }
-
-	void SetOwner(ModuleBehaviour* owner){m_Owner = owner;}
+	
 	ModuleBehaviour* GetOwner(){return m_Owner;}
 
-	void SetModule(ModuleBases* module) { m_module = module; }
-
-protected:
 	ModuleBases& thisModule() { return *m_module; }
-
+	
+protected:
+	void SetName(const std::string& name) { m_name = name; }
+	void SetOwner(ModuleBehaviour* owner) { m_Owner = owner; }
+	void SetModule(ModuleBases* module) { m_module = module; }
 //override
 public:
 	virtual bool Init() { return false; }

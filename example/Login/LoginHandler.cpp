@@ -5,8 +5,8 @@
 #include <MsgLogin.pb.h>
 using namespace NetMessage;
 
-LoginHandler::LoginHandler(ModuleBases& module)
-	:ModuleBehaviour(module),m_Accounts(nullptr)
+LoginHandler::LoginHandler()
+	:m_Accounts(nullptr)
 {
 
 }

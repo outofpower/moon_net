@@ -7,11 +7,10 @@
 #include <MsgLogin.pb.h>
 using namespace NetMessage;
 
-GateLoginHandler::GateLoginHandler(ModuleBases& module)
-	:ModuleBehaviour(module),m_LoginDatas(nullptr)
+GateLoginHandler::GateLoginHandler()
+	:m_LoginDatas(nullptr)
 {
 }
-
 
 GateLoginHandler::~GateLoginHandler()
 {

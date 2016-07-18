@@ -9,9 +9,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Config">
-      <UniqueIdentifier>{5dd0f4a2-c10b-4f13-b4d6-869190eb5023}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Logic">
       <UniqueIdentifier>{90a9467e-de9e-4ccc-8b93-8a76b45a3641}</UniqueIdentifier>
     </Filter>
@@ -136,5 +133,10 @@
     <ClInclude Include="ServerLog.h">
       <Filter>Main</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Debug\server_config.xml">
+      <Filter>资源文件</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
