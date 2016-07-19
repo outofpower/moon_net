@@ -35,7 +35,7 @@ namespace moon
 		_socket(ser.get_ioservice()),
 		_isSending(false),
 		_sendBuf(IO_BUFFER_SIZE, 0),
-		_state(ESocketState::Ok),
+		_state(ESocketState::Created),
 		_lastRecvTime(0)
 	{
 		console()->info("create socket");

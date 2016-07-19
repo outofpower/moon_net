@@ -65,7 +65,7 @@ namespace moon
 	enum  class ESocketState
 	{
 		Ok,
-		Create,
+		Created,
 		Accepted,
 		Connected,
 		Timeout,

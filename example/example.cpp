@@ -85,13 +85,12 @@ int main()
 #if TARGET_PLATFORM == PLATFORM_WIN32
 
 		SetConsoleCtrlHandler(HandlerRoutine, TRUE);
+#endif
 
 		while (!g_exit)
 		{
 			thread_sleep(1000);
 		}
-
-#endif
 
 		actmgr.stop();
 
