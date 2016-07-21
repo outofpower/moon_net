@@ -38,18 +38,20 @@ namespace moon
 		_state(ESocketState::Created),
 		_lastRecvTime(0)
 	{
-		console()->info("create socket");
+		NET_LOG.console("create socket");
 	}
 
 	socket::~socket(void)
 	{
-		console()->info("release socket[{0:d}] state[{1:d}]", _sockid.value, (int)_state);
+		NET_LOG.console("release socket[{0:d}] state[{1:d}]", _sockid.value, (int)_state);
 	}
 
 	bool socket::start()
 	{
 		_lastRecvTime			= std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		_remoteEndPoint		= _socket.remote_endpoint(_errorCode);
+
+		_state = ESocketState::Ok;
 
 		if (checkState())
 		{
@@ -71,20 +73,20 @@ namespace moon
 	{
 		if (_socket.is_open())
 		{
-			console()->info("socket address[{0}] forced closed, state[{1:d}]", get_remoteaddress().c_str(), (int)state);
+			NET_LOG.console("socket address[{0}] forced closed, state[{1:d}]", get_remoteaddress().c_str(), (int)state);
 			_state = state;
 			//所有异步处理将会立刻调用，并触发 asio::error::operation_aborted
 			_socket.shutdown(asio::ip::tcp::socket::shutdown_both, _errorCode);
 			if (_errorCode)
 			{
-				console()->info("socket address[{0}] shutdown falied:{2}.", get_remoteaddress().c_str(),_errorCode.message());
+				NET_LOG.console("socket address[{0}] shutdown falied:{2}.", get_remoteaddress().c_str(),_errorCode.message());
 			}
 			_socket.close(_errorCode);
 			if (_errorCode)
 			{
-				console()->info("socket address[{0}] close falied:{2}.", get_remoteaddress().c_str(), _errorCode.message());
+				NET_LOG.console("socket address[{0}] close falied:{2}.", get_remoteaddress().c_str(), _errorCode.message());
 			}
-			console()->info("socket address[{0}] close success.", get_remoteaddress().c_str());
+			NET_LOG.console("socket address[{0}] close success.", get_remoteaddress().c_str());
 		}
 	}
 
@@ -171,7 +173,7 @@ namespace moon
 
 		if (0 == _sendBuf.size())
 		{
-			console()->info("Temp to send to [%s]  0 bytes message.", get_remoteaddress().c_str());
+			NET_LOG.console("Temp to send to [%s]  0 bytes message.", get_remoteaddress().c_str());
 			return;
 		}
 
