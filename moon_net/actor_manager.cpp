@@ -47,7 +47,7 @@ namespace moon
 			wk->set_id(i);
 		}
 
-		console()->info("actor_manager initialized with {0:d} worker thread.", worker_num);
+		NET_LOG.console("actor_manager initialized with {0:d} worker thread.", worker_num);
 	}
 
 	void actor_manager::set_machine_id(uint8_t id)
@@ -94,7 +94,7 @@ namespace moon
 
 	void actor_manager::run()
 	{
-		console()->info("actor_manager start");
+		NET_LOG.console("actor_manager start");
 		for (auto& w : _workers)
 		{
 			w->run();
@@ -107,7 +107,7 @@ namespace moon
 		{
 			w->stop();
 		}
-		console()->info("actor_manager stop");
+		NET_LOG.console("actor_manager stop");
 	}
 
 	uint8_t actor_manager::get_next_worker(Eget_worker e /*= worker_roundrobin*/)

@@ -52,7 +52,7 @@ namespace moon
 		onUpdate = std::bind(&worker::update, this, std::placeholders::_1);
 		loop_thread::run();
 
-		console()->info("worker [{0:d}] run", _worker_id);
+		NET_LOG.console("worker [{0:d}] run", _worker_id);
 	}
 
 	void worker::stop()
@@ -67,7 +67,7 @@ namespace moon
 		while (_events.size() !=0){}
 		loop_thread::stop();
 
-		console()->info("worker [{0:d}] stop", _worker_id);
+		NET_LOG.console("worker [{0:d}] stop", _worker_id);
 	}
 	 
 	void worker::add_actor(const actor_ptr& act)
@@ -79,7 +79,7 @@ namespace moon
 			act->on_enter();
 			_actors.emplace(act->get_id(), act);
 
-			console()->info("actor [{0}] [{1:d}] enter", act->get_name().c_str(), act->get_id().value);
+			NET_LOG.console("actor [{0}] [{1:d}] enter", act->get_name().c_str(), act->get_id().value);
 		});
 	}
 
@@ -90,7 +90,7 @@ namespace moon
 			assert(iter != _actors.end());
 			iter->second->on_exit();
 			_actors.erase(id);
-			console()->info("actor [{0:d}] exit", id.value);
+			NET_LOG.console("actor [{0:d}] exit", id.value);
 		});
 	}
 
@@ -178,7 +178,7 @@ namespace moon
 			_msg_counter = 0;
 			_timer = 0;
 
-			console()->info("thread[{0}]:message fps [{1:d}] , event [{2:d} ms], copy[{3:d} ms], work[{4:d} ms]",std::this_thread::get_id(), _fps.load(), t2 - t1, t3 - t2, t4 - t3);
+			NET_LOG.console("thread[{0}]:message fps [{1:d}] , event [{2:d} ms], copy[{3:d} ms], work[{4:d} ms]",std::this_thread::get_id(), _fps.load(), t2 - t1, t3 - t2, t4 - t3);
 		}
 	}
 };

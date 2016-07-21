@@ -119,7 +119,6 @@ namespace moon
 		uint8_t get_workerID(module_id actorID);
 
 	private:
-		moon_net_log																m_Log;
 		std::atomic<uint8_t>													_nextworker;
 		std::atomic<uint16_t>													_actorIncID;
 		std::vector<worker_ptr>												_workers;

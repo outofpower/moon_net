@@ -82,11 +82,11 @@ template<class TModuleBehaviour>
 inline TModuleBehaviour * ModuleBases::AddModuleBehaviour()
 {
 	auto t = new TModuleBehaviour();
-	do 
-	{	
+	do
+	{
 		BREAK_IF(t == nullptr);
 		t->SetModule(this);
-		BREAK_IF(!t->Init());	
+		BREAK_IF(!t->Init());
 		auto name = typeid(TModuleBehaviour).name();
 		t->SetName(name);
 		auto iter = m_ModuleBehaviours.emplace(name, t);

@@ -39,7 +39,8 @@ struct tcp_frame::Imp
 		timeout(DEFAULT_TIMEOUT_INTERVAL),
 		timeoutCheckInterval(DEFAULT_TIMEOUTCHECK_INTERVAL),
 		bCheckTimeOut(false),
-		net_thread_num(net_thread_num)
+		net_thread_num(net_thread_num),
+		bOpen(false)
 	{
 
 	}
@@ -64,6 +65,8 @@ struct tcp_frame::Imp
 	module_id																	moduleid;
 
 	uint8_t																			net_thread_num;
+
+	bool																				bOpen;
 };
 
 tcp_frame::tcp_frame(const net_message_hander& handler,uint8_t net_thread_num)
@@ -74,7 +77,10 @@ tcp_frame::tcp_frame(const net_message_hander& handler,uint8_t net_thread_num)
 
 tcp_frame::~tcp_frame()
 {
-
+	if (_Imp->bOpen)
+	{
+		stop();
+	}
 }
 
 void tcp_frame::listen(const std::string& listenAddress, const std::string& listenPort, module_id moduleid)
@@ -114,6 +120,11 @@ void tcp_frame::listen(const std::string& listenAddress, const std::string& list
 
 void tcp_frame::postAccept()
 {
+	if (!_Imp->acceptor.is_open())
+	{
+		return;
+	}
+
 	auto& ser = _Imp->servicepool.get_service();
 	auto sock = std::make_shared<socket>(_hander,ser);
 	sock->setmodule_id(_Imp->moduleid);
@@ -126,18 +137,17 @@ void tcp_frame::postAccept()
 			return;
 		}
 		_Imp->errorCode = e;
-		stop();
 	});
 }
 
-void tcp_frame::connect(const std::string & ip, const std::string & port, module_id moduleid)
+void tcp_frame::async_connect(const std::string & ip, const std::string & port, module_id moduleid)
 {
 	asio::ip::tcp::resolver resolver(_Imp->servicepool.get_Ioservice());
 	asio::ip::tcp::resolver::query query(ip, port);
 	asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, _Imp->errorCode);
 	if (_Imp->errorCode)
 	{
-		console()->info("resolve endpoint failed:{0} . address:{1}  port{2}.", _Imp->errorCode.message().c_str(), ip.c_str(),port.c_str());
+		NET_LOG.console("resolve endpoint failed:{0} . address:{1}  port{2}.", _Imp->errorCode.message().c_str(), ip.c_str(),port.c_str());
 		return;
 	}
 
@@ -154,9 +164,36 @@ void tcp_frame::connect(const std::string & ip, const std::string & port, module
 		}
 		else
 		{
-			console()->info("connect failed:{0} . address:{1}  port{2}.", ec.message().c_str(), ip.c_str(), port.c_str());
+			NET_LOG.console("connect failed:{0} . address:{1}  port{2}.", ec.message().c_str(), ip.c_str(), port.c_str());
 		}
 	});
+}
+
+socket_id moon::tcp_frame::sync_connect(const std::string& ip, const std::string& port, module_id moduleid)
+{
+	asio::ip::tcp::resolver resolver(_Imp->servicepool.get_Ioservice());
+	asio::ip::tcp::resolver::query query(ip, port);
+	asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, _Imp->errorCode);
+	if (_Imp->errorCode)
+	{
+		NET_LOG.console("resolve endpoint failed:{0} . address:{1}  port{2}.", _Imp->errorCode.message().c_str(), ip.c_str(), port.c_str());
+		return socket_id::create(0);
+	}
+
+	auto& ser = _Imp->servicepool.get_service();
+	auto sock = std::make_shared<socket>(_hander, ser);
+	sock->setmodule_id(moduleid);
+
+	asio::connect(sock->get_socket(), endpoint_iterator, _Imp->errorCode);
+	if (_Imp->errorCode)
+	{
+		NET_LOG.console("connect failed:{0} . address:{1}  port{2}.", _Imp->errorCode.message().c_str(), ip.c_str(), port.c_str());
+		return socket_id::create(0);
+	}
+
+	ser.add_socket(sock);
+
+	return sock->getsocket_id();
 }
 
 void tcp_frame::send(socket_id sockid, const buffer_ptr& data)
@@ -171,36 +208,53 @@ void moon::tcp_frame::close_socket(socket_id sockid, ESocketState state)
 
 void tcp_frame::run()
 {
+	if (_Imp->bOpen)
+		return;
+
 	if (_Imp->errorCode)
 	{
-		console()->info("tcp_frame start failed:{0}", _Imp->errorCode.message().c_str());
+		NET_LOG.console("tcp_frame start failed:{0}", _Imp->errorCode.message().c_str());
 		return;
 	}
 
-	console()->info("tcp_frame start succeed");
+	NET_LOG.console("tcp_frame start succeed");
 
 	_Imp->servicepool.run();
 
 	if (_Imp->bCheckTimeOut)
 	{
-		console()->info("tcp_frame start check timeout thread succeed");
-
+		NET_LOG.console("tcp_frame start check timeout thread succeed");
 		_Imp->timeOutThread.set_interval(_Imp->timeoutCheckInterval);
 		_Imp->timeOutThread.onUpdate = std::bind(&tcp_frame::checkTimeOut, this, std::placeholders::_1);
 		_Imp->timeOutThread.run();
 	}
 
 	postAccept();
+
+	_Imp->bOpen = true;
 }
 
 void tcp_frame::stop()
 {
+	if (!_Imp->bOpen)
+	{
+		return;
+	}
+
+	if (_Imp->acceptor.is_open())
+	{
+		_Imp->acceptor.close(_Imp->errorCode);
+	}
+
 	if (_Imp->bCheckTimeOut)
 	{
 		_Imp->timeOutThread.stop();
 	}
+
 	_Imp->servicepool.stop();
-	console()->info("tcp_frame stop");
+	_Imp->bOpen = false;
+
+	NET_LOG.console("tcp_frame stop:{0}",_Imp->errorCode.message());
 }
 
 int tcp_frame::getErrorCode()

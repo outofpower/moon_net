@@ -33,10 +33,7 @@ service::service()
 
 service::~service(void)
 {
-	for (auto& sock : _sockets)
-	{
-		sock.second->close(ESocketState::Ok);
-	}
+
 }
 
 asio::io_service& service::get_ioservice()
@@ -46,12 +43,12 @@ asio::io_service& service::get_ioservice()
 
 void service::add_socket(const socket_ptr& socket)
 {
+	auto tmp = ++_inc_socketid;
+	socket_id sockid;
+	sockid.value = uint32_t(_services_id) << 24 | tmp;
+	socket->setsocket_id(sockid);
 	_ioservice.post([this,socket]() {
-		auto tmp = ++_inc_socketid;
-		socket_id sockid;
-		sockid.value = uint32_t(_services_id) << 24 | tmp;
-		socket->setsocket_id(sockid);
-		_sockets[sockid] = socket;
+		_sockets[socket->getsocket_id()] = socket;
 		socket->start();
 	});
 }
@@ -108,6 +105,13 @@ void service::run()
 
 void service::stop()
 {
+	_ioservice.post([this]() {
+		for (auto& sock : _sockets)
+		{
+			sock.second->close(ESocketState::Ok);
+		}
+		_sockets.clear();		
+	});
 	_ioservice.stop();
 }
 

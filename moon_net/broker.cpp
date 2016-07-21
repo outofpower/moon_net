@@ -84,7 +84,7 @@ namespace moon
 
 	void broker::connect(const std::string& ip, const std::string& port)
 	{
-		_Imp->_net.connect(ip, port, get_id());
+		_Imp->_net.async_connect(ip, port, get_id());
 	}
 
 	void broker::update(uint32_t interval)

@@ -109,7 +109,7 @@ private:
 	asio::io_service												_ioservice;
 	asio::io_service::work									_work;
 	std::unordered_map<socket_id,socket_ptr> _sockets;
-	uint32_t														_inc_socketid;
+	std::atomic<uint32_t>									_inc_socketid;
 	uint8_t															_services_id;
 };
 

@@ -63,7 +63,7 @@ void service_pool::stop()
 
 	for (uint32_t i = 0; i < _threads.size(); ++i)
 	{
-		//if(_threads[i]->joinable())
+		if(_threads[i]->joinable())
 		_threads[i]->join();
 	}
 }
