@@ -138,6 +138,9 @@
     <ClInclude Include="aes\AesHelper.hpp" />
     <ClInclude Include="any.hpp" />
     <ClInclude Include="binary.hpp" />
+    <ClInclude Include="binary_reader.hpp" />
+    <ClInclude Include="binary_writer.hpp" />
+    <ClInclude Include="memory_stream.hpp" />
     <ClInclude Include="sync_queue.hpp" />
     <ClInclude Include="buffer.hpp" />
     <ClInclude Include="delegate.hpp" />

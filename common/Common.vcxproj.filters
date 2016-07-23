@@ -14,6 +14,9 @@
     <Filter Include="code\aes">
       <UniqueIdentifier>{187a0100-a381-4cde-8e87-6d1be66a18e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code\io">
+      <UniqueIdentifier>{8d72a67d-c412-4f45-9dd7-5067c681cb5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -25,13 +28,7 @@
     <ClInclude Include="binary.hpp">
       <Filter>code</Filter>
     </ClInclude>
-    <ClInclude Include="buffer.hpp">
-      <Filter>code</Filter>
-    </ClInclude>
     <ClInclude Include="delegate.hpp">
-      <Filter>code</Filter>
-    </ClInclude>
-    <ClInclude Include="file.hpp">
       <Filter>code</Filter>
     </ClInclude>
     <ClInclude Include="hash_map.hpp">
@@ -84,6 +81,21 @@
     </ClInclude>
     <ClInclude Include="sync_queue.hpp">
       <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_stream.hpp">
+      <Filter>code\io</Filter>
+    </ClInclude>
+    <ClInclude Include="binary_writer.hpp">
+      <Filter>code\io</Filter>
+    </ClInclude>
+    <ClInclude Include="binary_reader.hpp">
+      <Filter>code\io</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer.hpp">
+      <Filter>code\io</Filter>
+    </ClInclude>
+    <ClInclude Include="file.hpp">
+      <Filter>code\io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
