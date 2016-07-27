@@ -1,6 +1,6 @@
 #pragma once
 #include <actor.h>
-#include "../ModuleBases.h"
+#include "../ModuleBase.h"
 
 using namespace moon;
 
@@ -9,7 +9,7 @@ class AccountDataCache;
 //хож╓дё©И
 class LoginModule:
 	public actor,
-	public ModuleBases
+	public ModuleBase
 {
 public:
 	LoginModule(module_id moduleid);

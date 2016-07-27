@@ -196,9 +196,9 @@ socket_id moon::tcp_frame::sync_connect(const std::string& ip, const std::string
 	return sock->getsocket_id();
 }
 
-void tcp_frame::send(socket_id sockid, const buffer_ptr& data)
+void tcp_frame::send(socket_id sockid, const message& msg)
 {
-	 _Imp->servicepool.send(sockid, data);
+	 _Imp->servicepool.send(sockid, msg);
 }
 
 void moon::tcp_frame::close_socket(socket_id sockid, ESocketState state)

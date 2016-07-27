@@ -16,17 +16,18 @@ bool LoginModuleHandler::Init()
 	return true;
 }
 
-void LoginModuleHandler::OnServerStart(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void LoginModuleHandler::OnServerStart(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	Log.console("login module: server start");
 	//向其他模块广播自己
 	auto sendmsg = SerializeUtil::serialize(EMsgID::MSG_S2S_MODULE_START);
-	(*sendmsg) << thisModule().GetName();
-	(*sendmsg) << thisModule().GetID().value;
+	binary_writer bw(sendmsg);
+	bw << thisModule().GetName();
+	bw << thisModule().GetID().value;
 	thisModule().Broadcast(sendmsg);
 }
 
-void LoginModuleHandler::OnModuleStart(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void LoginModuleHandler::OnModuleStart(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	std::string name;
 	module_id	 id;

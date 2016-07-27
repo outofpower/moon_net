@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <stack>
+#include <vector>
 #include <functional>
 
 class SingleThreadLock
@@ -48,11 +48,9 @@ public:
 	~object_pool()
 	{
 		GuradLock<Lock> lock(m_Objectlock);
-		while (!m_objects.empty())
+		for (auto& it : m_objects)
 		{
-			auto ptr = m_objects.top();
-			delete ptr;
-			m_objects.pop();
+			delete it;
 		}
 	};
 
@@ -87,8 +85,8 @@ private:
 			GuradLock<Lock> lock(m_Objectlock);
 			if (!m_objects.empty())
 			{
-				t = m_objects.top();
-				m_objects.pop();
+				t = m_objects.back();
+				m_objects.pop_back();
 			}
 		}
 
@@ -107,10 +105,10 @@ private:
 			return;
 		}
 		GuradLock<Lock> lock(m_Objectlock);
-		m_objects.push(t);
+		m_objects.push_back(t);
 	}
 
 private:
-	Lock					m_Objectlock;
-	std::stack<T*>	m_objects;
+	Lock						m_Objectlock;
+	std::vector<T*>	m_objects;
 };

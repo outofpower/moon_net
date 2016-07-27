@@ -51,10 +51,11 @@ namespace moon
 			_queue.push_back(x);
 		}
 
-		void emplace_back(T&& v)
+		template<typename _Tdata>
+		void emplace_back(_Tdata&& v)
 		{
 			std::unique_lock<std::mutex> lck(_mutex);
-			_queue.emplace_back(std::forward<T>(v));
+			_queue.emplace_back(std::forward<_Tdata>(v));
 		}
 
 		T pop_front()

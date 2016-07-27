@@ -31,15 +31,13 @@ namespace moon
 	class message
 	{
 	public:
-		explicit message(const buffer_ptr& data);
+		message(size_t capacity = 64, size_t headreserved = 0);
+
+		message(const message& msg) = default;
+
+		message(message&& msg) = default;
 
 		~message();
-
-		message(const message& msg);
-
-		message(message&& msg);
-
-		message& operator=(const message&) = delete;
 
 		/**
 		* 获取消息的发送者ID，一个消息要么是actor之间通讯的消息，要么是网络消息
@@ -78,21 +76,6 @@ namespace moon
 		* 获取用户自定义数据
 		*/
 		const uint8_t*			get_userdata(size_t size) const;
-	
-		/**
-		* 获取消息内容，该数据是只读的，因为广播消息时 改消息块是共享的
-		*/
-		const buffer_ptr&	msg_data() const;
-
-		/**
-		* 获取消息内容
-		*/
-		const uint8_t*			data() const;
-
-		/**
-		* 获取消息大小
-		*/
-		size_t						size() const;
 
 		/**
 		* 设置消息类型，参见 EMessageType
@@ -102,10 +85,37 @@ namespace moon
 		/**
 		* 获取消息类型，参见 EMessageType
 		*/
-		EMessageType			get_type() const;
+		EMessageType		   get_type() const;
+
+		operator memory_stream*()
+		{
+			return _msgdata.get();
+		}
+
+		const uint8_t* data() const
+		{
+			return _msgdata->data();
+		}
+
+		size_t size() const
+		{
+			return _msgdata->size();
+		}
 	protected:
-		class Imp;
-		std::shared_ptr<Imp>           _imp;
+		union sender
+		{
+			sender() {}
+			sender(const sender& other) :_sender(other._sender), _sockid(_sockid) {}
+
+			module_id							_sender;
+			socket_id								_sockid;
+		};
+
+		sender													_sender;
+		module_id											_receiver;
+		EMessageType										_type;
+		mutable std::vector<uint8_t>				_userdata;
+		memory_stream_ptr						    _msgdata;
 	};
 };
 

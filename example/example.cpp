@@ -57,6 +57,7 @@ BOOL WINAPI HandlerRoutine(DWORD dwCtrlType)
 int main()
 {
 	{
+		NET_LOG.set_write_log(true);
 		ServerLog log;
 		log.Init(".\\");
 

@@ -13,23 +13,26 @@ namespace moon
 	public:
 
 		template<class TMsg>
-		static  buffer_ptr serialize(EMsgID msgid, const TMsg& t)
+		static  message serialize(EMsgID msgid, const TMsg& t)
 		{
 			uint16_t size = t.ByteSize();
-			auto buff = buffer::create(sizeof(uint16_t) + size);
-			(*buff) << (uint16_t(msgid));
+			message msg(sizeof(uint16_t)+size);
+			binary_writer bw(msg);
+			bw << uint16_t(msgid);
+
 			uint8_t tmp[10000];
 			assert(size < sizeof(tmp));
 			t.SerializeToArray(tmp, size);
-			buff->append(tmp, size);
-			return buff;
+			bw.write(tmp, size);
+			return std::move(msg);
 		}
 
-		static  buffer_ptr serialize(EMsgID msgid)
+		static  message serialize(EMsgID msgid)
 		{
-			auto buff = buffer::create(sizeof(uint16_t));
-			(*buff) << (uint16_t(msgid));
-			return buff;
+			message msg(sizeof(uint16_t));
+			binary_writer bw(msg);
+			bw << uint16_t(msgid);
+			return std::move(msg);
 		}
 	};
 }

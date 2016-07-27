@@ -2,7 +2,7 @@
 #include "ServerDefine.h"
 
 class ModuleBehaviour;
-class ModuleBases;
+class ModuleBase;
 
 class Component :noncopyable
 {
@@ -16,12 +16,12 @@ public:
 	
 	ModuleBehaviour* GetOwner(){return m_Owner;}
 
-	ModuleBases& thisModule() { return *m_module; }
+	ModuleBase& thisModule() { return *m_module; }
 	
 protected:
 	void SetName(const std::string& name) { m_name = name; }
 	void SetOwner(ModuleBehaviour* owner) { m_Owner = owner; }
-	void SetModule(ModuleBases* module) { m_module = module; }
+	void SetModule(ModuleBase* module) { m_module = module; }
 //override
 public:
 	virtual bool Init() { return false; }
@@ -32,5 +32,5 @@ public:
 protected:
 	std::string																 m_name;
 	ModuleBehaviour*												 m_Owner;
-	ModuleBases*													     m_module;
+	ModuleBase*													     m_module;
 };

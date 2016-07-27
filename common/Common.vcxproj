@@ -155,6 +155,7 @@
     <ClInclude Include="singleton.hpp" />
     <ClInclude Include="string_convert.h" />
     <ClInclude Include="string_utils.hpp" />
+    <ClInclude Include="sync_queue2.h" />
     <ClInclude Include="timer\time.hpp" />
     <ClInclude Include="timer\timer_context.hpp" />
     <ClInclude Include="timer\timer_pool.h" />

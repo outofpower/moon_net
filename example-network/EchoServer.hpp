@@ -1,8 +1,10 @@
 #pragma once
 #include <common/noncopyable.hpp>
+#include <common/memory_stream.hpp>
+#include <common/binary_writer.hpp>
+#include <common/binary_reader.hpp>
 #include <tcp_frame.h>
 #include <message.h>
-#include <buffer_reader.h>
 #include <string>
 #include <iostream>
 #include <functional>
@@ -48,9 +50,8 @@ private:
 		case EMessageType::SocketConnect:
 		{
 			//连接，消息内容默认为远程主机地址
-			buffer_reader br(msg.data(), msg.size());
-			std::string addr;
-			br >> addr;
+			binary_reader br(msg.data(), msg.size());
+			std::string addr = br.read<std::string>();
 			std::cout <<"SERVER:client connect "<<addr<< std::endl;
 			break;
 		}
@@ -63,15 +64,17 @@ private:
 			auto sockID = msg.get_socket_id();
 
 
-			buffer_reader br(msg.data(), msg.size());
+			binary_reader br(msg.data(), msg.size());
 			//获取发来的信息
-			std::string  clientMsg;
-			br >> clientMsg;
+			std::string  clientMsg  = br.read<std::string>();
 
-			//把信息发送回去 （echoMsg是智能指针,方便多线程之间内存管理）
-			auto echoMsg = buffer::create(clientMsg.size() + 1);
-			(*echoMsg) << clientMsg;
-			m_Net->send(sockID, echoMsg);
+			////把信息发送回去
+			//message smsg(clientMsg.size() + 1);
+
+			//binary_writer bw(smsg);
+			//bw << clientMsg;
+
+			//m_Net->send(sockID, smsg);
 
 
 			std::cout << "SERVER:echo msg " << clientMsg << std::endl;
@@ -80,7 +83,7 @@ private:
 		case EMessageType::SocketClose:
 		{
 			//断开
-			buffer_reader br(msg.data(), msg.size());
+			binary_reader br(msg.data(), msg.size());
 			std::string addr;
 			br >> addr;
 			std::cout << "SERVER:client close " << addr << std::endl;

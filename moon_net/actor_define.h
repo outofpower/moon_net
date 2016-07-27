@@ -26,8 +26,11 @@ THE SOFTWARE.
 #include <common/moon_define.hpp>
 #include <common/timer/timer_pool.h>
 #include <common/noncopyable.hpp>
+#include <common/memory_stream.hpp>
+#include <common/binary_writer.hpp>
+#include <common/binary_reader.hpp>
+#include <common/object_pool.hpp>
 
-#include "buffer.h"
 #include "socket_id.h"
 #include "module_id.h"
 

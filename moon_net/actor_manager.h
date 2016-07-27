@@ -23,12 +23,15 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #pragma once
+#include <common/singleton.hpp>
+#include <common/object_pool.hpp>
+
 #include "actor_define.h"
 #include "moon_net_log.h"
 namespace moon
 {
 	//actor 管理类，负责actor的创建，调度，移除
-	class actor_manager:noncopyable
+	class actor_manager:public singleton<actor_manager>
 	{
 	public:
 		actor_manager();
@@ -99,6 +102,13 @@ namespace moon
 		*
 		*/
 		void			stop();
+
+		/**
+		* 内存流对象池
+		*
+		*/
+		object_pool<memory_stream, 100, std::mutex>&
+			get_memory_stream_pool() { return _mspool; }
 	private:
 		/**
 		* 轮询获取worker ID
@@ -123,6 +133,9 @@ namespace moon
 		std::atomic<uint16_t>													_actorIncID;
 		std::vector<worker_ptr>												_workers;
 		uint8_t																			_machine_id;
+
+	private:
+		object_pool<memory_stream,100,std::mutex>			_mspool;
 	};
 
 
@@ -145,5 +158,5 @@ namespace moon
 	}
 };
 
-
+#define ACTOR_MANAGER moon::actor_manager::Instance()
 

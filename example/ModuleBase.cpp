@@ -1,11 +1,11 @@
-#include "ModuleBases.h"
+#include "ModuleBase.h"
 
-ModuleBases::ModuleBases(moon::actor* value)
+ModuleBase::ModuleBase(moon::actor* value)
 	:m_actor(value)
 {
 }
 
-ModuleBases::~ModuleBases()
+ModuleBase::~ModuleBase()
 {
 	for (auto& iter : m_ModuleBehaviours)
 	{
@@ -13,7 +13,7 @@ ModuleBases::~ModuleBases()
 	}
 }
 
-void ModuleBases::AddOtherModule(const std::string & name, module_id id)
+void ModuleBase::AddOtherModule(const std::string & name, module_id id)
 {
 	m_otherModules[name] = id;
 	if (name == "gate")
@@ -22,7 +22,7 @@ void ModuleBases::AddOtherModule(const std::string & name, module_id id)
 	}
 }
 
-module_id ModuleBases::GetOtherModule(const std::string & name)
+module_id ModuleBase::GetOtherModule(const std::string & name)
 {
 	auto& iter = m_otherModules.find(name);
 	if (iter != m_otherModules.end())
@@ -32,13 +32,12 @@ module_id ModuleBases::GetOtherModule(const std::string & name)
 	return module_id::create(0);
 }
 
-void ModuleBases::Send(module_id receiver, const buffer_ptr & data, EchoHandler && hander, EMessageType type)
+void ModuleBase::Send(module_id receiver,message& msg, EchoHandler && hander, EMessageType type)
 {
 	auto cur_tm = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	auto inc_id = ++m_echoIncID;
 	uint64_t echo_msg_id = (cur_tm << 32 | inc_id);
 
-	message msg(data);
 	msg.set_type(type);
 	UserContext ctx;
 	ctx.sender_echo_id = echo_msg_id;
@@ -49,11 +48,9 @@ void ModuleBases::Send(module_id receiver, const buffer_ptr & data, EchoHandler 
 	m_actor->send_message(receiver, msg);
 }
 
-void ModuleBases::Send(module_id receiver, const buffer_ptr & data, EMessageType type, uint64_t echoid)
+void ModuleBase::Send(module_id receiver,message& msg, EMessageType type, uint64_t echoid)
 {
-	message msg(data);
 	msg.set_type(type);
-
 	UserContext ctx;
 	ctx.receiver_echo_id = echoid;
 	msg.set_userdata((uint8_t*)&ctx, sizeof(ctx));
@@ -61,17 +58,15 @@ void ModuleBases::Send(module_id receiver, const buffer_ptr & data, EMessageType
 	m_actor->send_message(receiver, msg);
 }
 
-void ModuleBases::Broadcast(const buffer_ptr & data, EMessageType type)
+void ModuleBase::Broadcast(message& msg, EMessageType type)
 {
-	message msg(data);
 	msg.set_sender(m_actor->get_id());
 	msg.set_type(type);
 	m_actor->broadcast_message(msg);
 }
 
-void ModuleBases::Send(account_id accountid, const buffer_ptr & data)
+void ModuleBase::Send(account_id accountid, message& msg)
 {
-	message msg(data);
 	msg.set_type(EMessageType::ToClient);
 
 	UserContext ctx;
@@ -81,9 +76,8 @@ void ModuleBases::Send(account_id accountid, const buffer_ptr & data)
 	m_actor->send_message(_GateModule, msg);
 }
 
-void ModuleBases::Send(player_id playerid, const buffer_ptr & data)
+void ModuleBase::Send(player_id playerid, message& msg)
 {
-	message msg(data);
 	msg.set_type(EMessageType::ToClient);
 
 	UserContext ctx;
@@ -92,17 +86,17 @@ void ModuleBases::Send(player_id playerid, const buffer_ptr & data)
 	m_actor->send_message(_GateModule, msg);
 }
 
-void ModuleBases::Send(const std::vector<player_id>& players, const buffer_ptr & data)
+void ModuleBase::Send(const std::vector<player_id>& players, message& msg)
 {
 	for (auto& id : players)
 	{
-		Send(id, data);
+		Send(id, msg);
 	}
 }
 
-bool ModuleBases::DispatchMessages(const user_id & userid, const message & msg, uint64_t sender_echo_id)
+bool ModuleBase::DispatchMessages(const user_id & userid, const message & msg, uint64_t sender_echo_id)
 {
-	buffer_reader br(msg.data(), msg.size());
+	binary_reader br(msg.data(), msg.size());
 
 	uint16_t msgID = 0;
 	br >> msgID;
@@ -126,12 +120,12 @@ bool ModuleBases::DispatchMessages(const user_id & userid, const message & msg, 
 	return false;
 }
 
-moon::timer_pool & ModuleBases::GetTimerPool()
+moon::timer_pool & ModuleBase::GetTimerPool()
 {
 	return m_actor->get_timer_pool();
 }
 
-void ModuleBases::HandlerEchoMessage(uint64_t echo_id, const message & msg)
+void ModuleBase::HandlerEchoMessage(uint64_t echo_id, const message & msg)
 {
 	auto& iter = m_echoHandlers.find(echo_id);
 	if (iter != m_echoHandlers.end())
@@ -141,7 +135,7 @@ void ModuleBases::HandlerEchoMessage(uint64_t echo_id, const message & msg)
 	}
 }
 
-void ModuleBases::OnClientClose(account_id accountID, player_id playerID)
+void ModuleBase::OnClientClose(account_id accountID, player_id playerID)
 {
 	for (auto& mbh : m_ModuleBehaviours)
 	{

@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 #include "actor_define.h"
 #include <asio/asio.hpp>
+#include "message.h"
 
 namespace moon
 {
@@ -55,7 +56,7 @@ namespace moon
 		* 向该socket连接发送数据
 		*
 		*/
-		void											send(const buffer_ptr& pkt);
+		void											send(const message& data);
 
 		/**
 		* 获取asio::ip::tcp::socket
@@ -125,11 +126,11 @@ namespace moon
 		//异步接收缓冲区
 		uint8_t										_recvBuffer[IO_BUFFER_SIZE];
 		//接收消息缓冲区
-		buffer										_recvBuf;
+		memory_stream						_recvms;
 		//发送缓冲区
-		buffer										_sendBuf;
+		memory_stream						_sendms;
 		//发送消息发送队列
-		std::deque<buffer_ptr>			_sendQueue;
+		std::deque<message>			_sendQueue;
 		//是否正在发送
 		bool											_isSending;
 		//网络错误

@@ -34,7 +34,8 @@ namespace moon
 		_handler(handler),
 		_socket(ser.get_ioservice()),
 		_isSending(false),
-		_sendBuf(IO_BUFFER_SIZE, 0),
+		_recvms(IO_BUFFER_SIZE),
+		_sendms(IO_BUFFER_SIZE),
 		_state(ESocketState::Created),
 		_lastRecvTime(0)
 	{
@@ -55,13 +56,14 @@ namespace moon
 
 		if (checkState())
 		{
-			auto buf = buffer::create(0);
-			(*buf) << get_remoteaddress();
-			
-			message msg(buf);
+			message msg;
 			msg.set_type(EMessageType::SocketConnect);
 			msg.set_sender(_sockid);
 			msg.set_receiver(_module_id);
+
+			binary_writer bw(msg);
+			bw<< get_remoteaddress();
+
 			_handler(msg);
 			postRead();
 			return true;
@@ -116,11 +118,12 @@ namespace moon
 		if (!e && bytes_transferred)
 		{
 			_lastRecvTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-			_recvBuf.append(_recvBuffer, bytes_transferred);
-	
-			while (_recvBuf.size() > sizeof(msg_size_t))
+			
+			_recvms.write_back(_recvBuffer, 0, bytes_transferred);
+
+			while (_recvms.size() > sizeof(msg_size_t))
 			{
-				msg_size_t size = *(msg_size_t*)_recvBuf.data();
+				msg_size_t size = *(msg_size_t*)_recvms.data();
 				if (size > MAX_MSG_SIZE)
 				{
 					onClose();
@@ -128,22 +131,25 @@ namespace moon
 				}				
 				assert(size <= MAX_MSG_SIZE);
 				//消息不完整 继续接收消息
-				if (_recvBuf.size() < sizeof(msg_size_t) + size)
+				//if (_recvBuf.size() < sizeof(msg_size_t) + size)
+				if (_recvms.size() < sizeof(msg_size_t) + size)
 				{
 					break;
 				}
-				_recvBuf.skip(sizeof(msg_size_t));
 
-				auto buf = buffer::create(size, 24);
-				buf->append(_recvBuf.data(), size);
-			
-				message msg(buf);
+				_recvms.seek(sizeof(msg_size_t), memory_stream::Current);
+
+				message msg(size, 24);
 				msg.set_type(EMessageType::SocketData);
 				msg.set_sender(_sockid);
 				msg.set_receiver(_module_id);
+
+				binary_writer bw(msg);
+				bw.write(_recvms.data(), size);
+
 				_handler(msg);
 
-				_recvBuf.skip(size);
+				_recvms.seek(size, memory_stream::Current);
 			}
 
 			postRead();
@@ -158,20 +164,19 @@ namespace moon
 		if (_sendQueue.size() == 0)
 			return;
 
-		_sendBuf.clear();
+		_sendms.clear();
 
-		while ((_sendQueue.size() > 0) && (_sendBuf.size() + _sendQueue.front()->size() < IO_BUFFER_SIZE))
+		while ((_sendQueue.size() > 0) && (_sendms.size() + _sendQueue.front().size() < IO_BUFFER_SIZE))
 		{
-			auto& buf = _sendQueue.front();
+			auto& msg = _sendQueue.front();
 			msg_size_t size = 0;
-			size += buf->size() &0xFFFF;
-			_sendBuf.append((uint8_t*)&size, sizeof(msg_size_t));
-			_sendBuf.append(buf->data(), buf->size());
-
+			size +=msg.size() &0xFFFF;
+			_sendms.write_back(&size,0,1);
+			_sendms.write_back(msg.data(),0,msg.size());
 			_sendQueue.pop_front();
 		}
 
-		if (0 == _sendBuf.size())
+		if (0 == _sendms.size())
 		{
 			NET_LOG.console("Temp to send to [%s]  0 bytes message.", get_remoteaddress().c_str());
 			return;
@@ -181,7 +186,7 @@ namespace moon
 
 		asio::async_write(
 			_socket,
-			asio::buffer(_sendBuf.data(), _sendBuf.size()),
+			asio::buffer(_sendms.data(), _sendms.size()),
 			std::bind(&socket::handleSend, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
 	}
 
@@ -199,14 +204,14 @@ namespace moon
 
 	void socket::onClose()
 	{
-
-		auto buf = buffer::create(0);
-		(*buf) << (get_remoteaddress());
-
-		message msg(buf);
+		message msg;
 		msg.set_type(EMessageType::SocketClose);
 		msg.set_sender(_sockid);
 		msg.set_receiver(_module_id);
+
+		binary_writer bw(msg);
+		bw << get_remoteaddress();
+
 		_handler(msg);
 		_service.remove_socket(_sockid);
 	}
@@ -220,9 +225,9 @@ namespace moon
 		return true;
 	}
 
-	void socket::send(const buffer_ptr& pkt)
+	void socket::send(const message& msg)
 	{
-		_sendQueue.push_back(pkt);
+		_sendQueue.push_back(msg);
 		if (!_isSending)
 		{
 			postSend();

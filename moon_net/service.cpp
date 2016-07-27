@@ -71,14 +71,14 @@ void service::post_check_timeout(uint32_t timeout)
 	});
 }
 
-void service::send(socket_id socketID, const buffer_ptr & data)
+void service::send(socket_id socketID, const message& msg)
 {
-	_ioservice.post([this,socketID, data]()
+	_ioservice.post([this,socketID, msg]()
 	{
 		auto& iter = _sockets.find(socketID);
 		if (iter != _sockets.end())
 		{
-			iter->second->send(data);
+			iter->second->send(msg);
 		}
 	});
 }

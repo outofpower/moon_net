@@ -1,11 +1,11 @@
 #pragma once
 #include "ServerDefine.h"
 #include "Component.h"
-class ModuleBases;
+class ModuleBase;
 class ModuleBehaviour :noncopyable
 {
 public:
-	friend class ModuleBases;
+	friend class ModuleBase;
 
 	ModuleBehaviour()
 		:m_module(nullptr)
@@ -46,20 +46,20 @@ public:
 
 
 
-	ModuleBases& thisModule()
+	ModuleBase& thisModule()
 	{
 		return *m_module;
 	}
 
 protected:
-	void SetModule(ModuleBases* module)
+	void SetModule(ModuleBase* module)
 	{
 		assert(nullptr != module);
 		m_module = module;
 	}
 
 private:
-	ModuleBases*														 m_module;
+	ModuleBase*														 m_module;
 	std::string																 m_name;
 	std::unordered_map<std::string, Component*> m_Components;
 };

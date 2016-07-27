@@ -23,49 +23,14 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "message.h"
+#include "actor_manager.h"
 
 namespace moon
 {
-	union sender
+	message::message(size_t capacity, size_t headreserved)
+		:_type( EMessageType::Unknown)
 	{
-		sender() {}
-		sender(const sender& other) :_sender(other._sender), _sockid(_sockid) {}
-
-		module_id							_sender;
-		socket_id								_sockid;
-	};
-
-	class message::Imp
-	{
-	public:
-		Imp(const buffer_ptr& data)
-			:_data(data), _type(EMessageType::Unknown)
-		{
-
-		}
-		sender										_sender;
-		module_id								_receiver;
-		EMessageType							_type;
-		buffer_ptr								_data;
-		mutable std::vector<uint8_t>				_userdata;
-	};
-
-	message::message(const buffer_ptr& data)
-		:_imp(std::make_shared<Imp>(data))
-	{
-
-	}
-
-	message::message(const message& msg)
-		:_imp(msg._imp)
-	{
-
-	}
-
-	message::message(message&& msg)
-		: _imp(std::move(msg._imp))
-	{
-
+		_msgdata = ACTOR_MANAGER.get_memory_stream_pool().create(capacity, headreserved);
 	}
 
 	message::~message()
@@ -75,79 +40,58 @@ namespace moon
 
 	moon::module_id message::get_sender() const
 	{
-		return  _imp->_sender._sender;
+		return  _sender._sender;
 	}
 
 	moon::socket_id message::get_socket_id() const
 	{
-		return _imp->_sender._sockid;
+		return _sender._sockid;
 	}
 
 	void message::set_sender(module_id sder)
 	{
-		_imp->_sender._sender = sder;
+		_sender._sender = sder;
 	}
 
 	void message::set_sender(socket_id sockid)
 	{
-		_imp->_sender._sockid = sockid;
+		_sender._sockid = sockid;
 	}
 
 	void message::set_userdata(uint8_t* data, size_t size) const
 	{
-		if (_imp->_userdata.size() < size)
+		if (_userdata.size() < size)
 		{
-			_imp->_userdata.resize(size);
+			_userdata.resize(size);
 		}
-		std::copy(data, data +size, _imp->_userdata.begin());
+		std::copy(data, data +size, _userdata.begin());
 	}
 
 	const uint8_t* message::get_userdata(size_t size) const
 	{
-		if(_imp->_userdata.size() >= size)
-			return _imp->_userdata.data();
+		if(_userdata.size() >= size)
+			return _userdata.data();
 		return nullptr;
-	}
-
-	const buffer_ptr& message::msg_data() const
-	{
-		return _imp->_data;
-	}
-
-	const uint8_t* message::data() const
-	{
-		if (_imp->_data != nullptr)
-			return _imp->_data->data();
-
-		return nullptr;
-	}
-
-	size_t message::size() const
-	{
-		if (_imp->_data != nullptr)
-			return _imp->_data->size();
-		return 0;
 	}
 
 	void message::set_receiver(module_id receiver)
 	{
-		_imp->_receiver = receiver;
+		_receiver = receiver;
 	}
 
 	module_id message::get_receiver() const
 	{
-		return _imp->_receiver;
+		return _receiver;
 	}
 
 	void message::set_type(EMessageType type)
 	{
-		_imp->_type = type;
+		_type = type;
 	}
 
 	moon::EMessageType message::get_type() const
 	{
-		return _imp->_type;
+		return _type;
 	}
-
 }
 

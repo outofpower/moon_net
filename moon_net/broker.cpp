@@ -101,9 +101,9 @@ namespace moon
 		_Imp->_net_msg.push_back(msg);
 	}
 
-	void broker::send_socket_message(socket_id sockid, const buffer_ptr& data)
+	void broker::send_socket_message(socket_id sockid, const message& msg)
 	{
-		_Imp->_net.send(sockid, data);
+		_Imp->_net.send(sockid, msg);
 	}
 
 	void broker::force_close_socket(socket_id sockid)

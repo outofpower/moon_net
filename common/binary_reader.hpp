@@ -23,20 +23,23 @@ namespace moon
 		}
 
 		template<typename T>
-		T read(T* t = nullptr)
+		typename std::enable_if<
+			!std::is_same<T, bool>::value && 
+			!std::is_same<T, std::string>::value, T>::type 
+			read()
 		{
 			static_assert(std::is_pod<T>::value, "type T must be pod.");
 			return _read<T>();
 		}
 
 		template<typename T>
-		T read(typename std::enable_if<std::is_same<T, bool>::value>::type* t = nullptr)
+		typename std::enable_if<std::is_same<T, bool>::value, T>::type read()
 		{
 			return (_read<uint8_t>() != 0) ? true : false;
 		}
 
 		template<typename T>
-		T read(typename std::enable_if<std::is_same<T,std::string>::value>::type* t = nullptr)
+		typename std::enable_if<std::is_same<T, std::string>::value, T>::type read()
 		{
 			std::string tmp;
 			while (m_readpos < m_size)
@@ -48,7 +51,6 @@ namespace moon
 			}
 			return std::move(tmp);
 		}
-
 
 		template<class T>
 		std::vector<T> read_vector()

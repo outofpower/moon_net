@@ -45,8 +45,9 @@ void GateLoginHandler::ClientExitServer(account_id accountID, player_id playerID
 
 	//通知其他模块客户端退出
 	auto msg = SerializeUtil::serialize(EMsgID::MSG_S2S_ClientClose);
-	(*msg) << accountID.value;
-	(*msg) << playerID.value;
+	binary_writer bw(msg);
+	bw<< accountID.value;
+	bw<< playerID.value;
 	thisModule().Broadcast(msg);
 
 	Log.trace("5.client close [accountid:{0}] [player:{1}] Send to login module .", accountID.value, playerID.value);
@@ -57,7 +58,7 @@ void GateLoginHandler::ClientExitServer(account_id accountID, player_id playerID
 }
 
 //客户端申请身份认证
-void GateLoginHandler::OnRequestLogin(const user_id& userid,uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void GateLoginHandler::OnRequestLogin(const user_id& userid,uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	PARSE_MESSAGE(C2SReqLogin);
 	Log.trace("1.login username[{0}] password[{0}]", tmp.username().data(), tmp.password().data());
@@ -71,9 +72,10 @@ void GateLoginHandler::OnRequestLogin(const user_id& userid,uint16_t msgID, buff
 
 	//转发给LoginModule
 	auto sendMsg = SerializeUtil::serialize(EMsgID::MSG_C2S_REQ_LOGIN);
-	(*sendMsg) << serial_num;
-	(*sendMsg) << accountID.value;
-	(*sendMsg) << tmp.password();
+	binary_writer bw(sendMsg);
+	bw << serial_num;
+	bw << accountID.value;
+	bw << tmp.password();
 
 	auto socketid = userid.get_socket_id();
 
@@ -88,7 +90,7 @@ void GateLoginHandler::OnRequestLogin(const user_id& userid,uint16_t msgID, buff
 	{
 		Log.trace("3.login receive echo accountID[{0}] ", accountID.value);
 
-		buffer_reader buf(msg.data(), msg.size());
+		binary_reader buf(msg.data(), msg.size());
 
 		uint32_t   _loginRet = 0;
 		uint64_t   _serial_num = 0;
@@ -139,7 +141,7 @@ void GateLoginHandler::OnRequestLogin(const user_id& userid,uint16_t msgID, buff
 	});
 }
 
-void GateLoginHandler::OnSetPlayerID(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void GateLoginHandler::OnSetPlayerID(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	account_id accountid ;
 	player_id playerid ;
@@ -160,7 +162,7 @@ void GateLoginHandler::OnSetPlayerID(const user_id& userid, uint16_t msgID, buff
 	Log.trace("set [accountid:{0}] playerid:{1}",accountid.value,playerid.value);
 }
 
-void GateLoginHandler::OnSetSceneID(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void GateLoginHandler::OnSetSceneID(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	player_id playerid;
 	module_id sceneid;

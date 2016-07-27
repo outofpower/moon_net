@@ -157,7 +157,7 @@
     <ClCompile Include="Login\LoginModuleHandler.cpp" />
     <ClCompile Include="message_define\MsgLogin.pb.cc" />
     <ClCompile Include="message_define\MsgUserInfo.pb.cc" />
-    <ClCompile Include="ModuleBases.cpp" />
+    <ClCompile Include="ModuleBase.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +174,7 @@
     <ClInclude Include="MessageID.h" />
     <ClInclude Include="message_define\MsgLogin.pb.h" />
     <ClInclude Include="message_define\MsgUserInfo.pb.h" />
-    <ClInclude Include="ModuleBases.h" />
+    <ClInclude Include="ModuleBase.h" />
     <ClInclude Include="ModuleBehaviour.h" />
     <ClInclude Include="SerializeUtil.h" />
     <ClInclude Include="ServerDefine.h" />

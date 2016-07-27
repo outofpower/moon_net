@@ -8,32 +8,32 @@
 #include "SerializeUtil.h"
 
 using EchoHandler = std::function<void(const message&)>;
-using MessageFunc = std::function<void(const user_id& userid, uint16_t, buffer_reader&, uint64_t)>;
+using MessageFunc = std::function<void(const user_id& userid, uint16_t, binary_reader&, uint64_t)>;
 
-class ModuleBases
+class ModuleBase
 {
 public:
-	ModuleBases(moon::actor* value);
-	virtual ~ModuleBases();
+	ModuleBase(moon::actor* value);
+	virtual ~ModuleBase();
 
 	void						AddOtherModule(const std::string& name, module_id id);
 
 	module_id			GetOtherModule(const std::string& name);
 
-	void						Send(module_id receiver, const buffer_ptr& data, EchoHandler&& hander, EMessageType type = EMessageType::ActorData);
+	void						Send(module_id receiver,message& msg, EchoHandler&& hander, EMessageType type = EMessageType::ActorData);
 
-	void						Send(module_id receiver, const buffer_ptr& data, EMessageType type = EMessageType::ActorData, uint64_t echoid = 0);
+	void						Send(module_id receiver,message& msg, EMessageType type = EMessageType::ActorData, uint64_t echoid = 0);
 
-	void						Broadcast(const buffer_ptr& data, EMessageType type = EMessageType::ActorData);
+	void						Broadcast(message& msg, EMessageType type = EMessageType::ActorData);
 
-	void						Send(account_id accountid, const buffer_ptr& data);
+	void						Send(account_id accountid,message& msg);
 
-	void						Send(player_id playerid, const buffer_ptr& data);
+	void						Send(player_id playerid, message& msg);
 
-	void						Send(const std::vector<player_id>& players, const buffer_ptr& data);
+	void						Send(const std::vector<player_id>& players,message& msg);
 
 	//消息分发
-	bool						DispatchMessages(const user_id& userid, const message& msg, uint64_t sender_echo_id);
+	bool						DispatchMessages(const user_id& userid,const message& msg, uint64_t sender_echo_id);
 
 	moon::timer_pool& GetTimerPool();
 
@@ -67,7 +67,7 @@ protected:
 };
 
 template<class T>
-inline T ModuleBases::get_userdata(const message & msg)
+inline T ModuleBase::get_userdata(const message & msg)
 {
 	T tmp;
 	auto data = msg.get_userdata(sizeof(T));
@@ -79,7 +79,7 @@ inline T ModuleBases::get_userdata(const message & msg)
 }
 
 template<class TModuleBehaviour>
-inline TModuleBehaviour * ModuleBases::AddModuleBehaviour()
+inline TModuleBehaviour * ModuleBase::AddModuleBehaviour()
 {
 	auto t = new TModuleBehaviour();
 	do
@@ -98,7 +98,7 @@ inline TModuleBehaviour * ModuleBases::AddModuleBehaviour()
 }
 
 template<class TModuleBehaviour>
-inline TModuleBehaviour * ModuleBases::GetModuleBehaviour()
+inline TModuleBehaviour * ModuleBase::GetModuleBehaviour()
 {
 	auto& iter = m_ModuleBehaviours.find(typeid(TModuleBehaviour).name());
 	if (iter != m_ModuleBehaviours.end())
@@ -109,7 +109,7 @@ inline TModuleBehaviour * ModuleBases::GetModuleBehaviour()
 }
 
 template<class T, class Func>
-inline void ModuleBases::RegisterMessage(EMsgID msgID, T * t, Func f)
+inline void ModuleBase::RegisterMessage(EMsgID msgID, T * t, Func f)
 {
 	m_msgFuncs[uint16_t(msgID)] = std::bind(f, t, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 }

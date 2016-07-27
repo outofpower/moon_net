@@ -68,13 +68,13 @@ void service_pool::stop()
 	}
 }
 
-void moon::service_pool::send(socket_id sockid, const buffer_ptr& data)
+void moon::service_pool::send(socket_id sockid, const message& msg)
 {
 	uint8_t servicesid = (sockid.value >> 24)&0xFF;
 	auto iter = _services.find(servicesid);
 	if (iter != _services.end())
 	{
-		iter->second->send(sockid, data);
+		iter->second->send(sockid, msg);
 	}
 }
 

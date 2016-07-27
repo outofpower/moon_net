@@ -37,7 +37,7 @@ public:
 
 	void stop();
 
-	void	send(socket_id sockid, const buffer_ptr& data);
+	void	send(socket_id sockid, const message& msg);
 
 	void	close_socket(socket_id sockid, ESocketState state);
 

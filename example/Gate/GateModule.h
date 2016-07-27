@@ -1,6 +1,6 @@
 #pragma once
 #include <broker.h>
-#include "../ModuleBases.h"
+#include "../ModuleBase.h"
 
 using namespace moon;
 
@@ -9,7 +9,7 @@ class ConnectionManager;
 //Íø¹ØÄ£¿é
 class GateModule:
 	public broker,
-	public ModuleBases
+	public ModuleBase
 {
 public:
 	GateModule(module_id moduleid);

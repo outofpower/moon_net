@@ -74,7 +74,7 @@ namespace moon
 		* @sockid 连接标识
 		* @data 数据
 		*/
-		void							send(socket_id sockid, const buffer_ptr& data);
+		void							send(socket_id sockid, const message& msg);
 
 		/**
 		* 关闭一个链接

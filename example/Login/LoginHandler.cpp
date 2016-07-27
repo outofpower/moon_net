@@ -38,7 +38,7 @@ void LoginHandler::OnClientClose(account_id accountID, player_id playerID)
 	}
 }
 
-void LoginHandler::OnRequestLogin(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid)
+void LoginHandler::OnRequestLogin(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid)
 {
 	uint64_t   login_serial_num = 0;
 	account_id accountID;
@@ -89,11 +89,12 @@ void LoginHandler::OnRequestLogin(const user_id& userid, uint16_t msgID, buffer_
 
 	} while (0);
 
-	auto sendMsg = buffer::create(100);
-	(*sendMsg) << uint32_t(ret);
-	(*sendMsg) << login_serial_num;
-	(*sendMsg) << accountID.value;
-	thisModule().Send(thisModule().getGateModule(),sendMsg, EMessageType::ActorData, echoid);
+	message msg;
+	binary_writer bw(msg);
+	bw << uint32_t(ret);
+	bw << login_serial_num;
+	bw << accountID.value;
+	thisModule().Send(thisModule().getGateModule(), msg, EMessageType::ActorData, echoid);
 }
 
 

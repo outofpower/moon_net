@@ -32,8 +32,8 @@ THE SOFTWARE.
 
 namespace moon
 {
-	class		memory_stream;
-	using	memory_stream_ptr = std::shared_ptr<memory_stream>;
+	class memory_stream;
+	using memory_stream_ptr =  std::shared_ptr<memory_stream>;
 
 	class memory_stream
 	{
@@ -47,57 +47,42 @@ namespace moon
 			End
 		};
 
-		memory_stream(void)
-			:m_data(DEFAULT_CAPACITY),
-			m_readpos(0),
-			m_writepos(0),
-			m_headreserved(0)
-		{
-			assert(size() == 0);
-			assert(write_able_size() == DEFAULT_CAPACITY);
-		}
-
-		memory_stream(size_t capacity)
-			:m_data(capacity),
-			m_readpos(0),
-			m_writepos(0),
-			m_headreserved(0)
+		memory_stream(size_t capacity = DEFAULT_CAPACITY, size_t headreserved = 0)
+			:m_data(capacity+ headreserved),m_readpos(0),m_writepos(0)
 		{
 			assert(size() == 0);
 			assert(write_able_size() == capacity);
 		}
 
-		memory_stream(size_t capacity,size_t headreserved)
-			:m_data(capacity+ headreserved),
-			m_readpos(headreserved),
-			m_writepos(headreserved),
-			m_headreserved(headreserved)
+		memory_stream(const memory_stream& other)
+			:m_data(other.m_data),m_readpos(other.m_readpos),m_writepos(other.m_writepos)
 		{
-			assert(capacity >= headreserved && "capacity must be equal or greater than headreserved");
-			assert(size() == 0);
-			assert(write_able_size() == capacity);
+			assert(0);
+		}
+
+		memory_stream(memory_stream&& other)
+			:m_data(std::move(other.m_data)),m_readpos(other.m_readpos),m_writepos(other.m_writepos)
+		{
+
 		}
 
 		~memory_stream(void)
 		{
+
 		}
 
-		memory_stream(const memory_stream& t) = delete;
-		memory_stream& operator=(const memory_stream& t) = delete;
-
-		template<typename... Args>
-		static memory_stream create(Args&&... args)
+		void init(size_t capacity = DEFAULT_CAPACITY, size_t headreserved = 0)
 		{
-			return std::make_shared<memory_stream>(std::forward<Args>(args)...);
+			if (m_data.capacity() < capacity + headreserved)
+			{
+				m_data.resize(capacity + headreserved);
+			}
+			
+			m_readpos = 0;
+			m_writepos = 0;
 		}
 
-		void init()
-		{
-			m_data.resize(DEFAULT_CAPACITY+m_headreserved);
-			m_readpos = m_writepos = m_headreserved;
-		}
-
-		template<typename T,typename _T = std::remove_cv<T>::type>
+		template<typename T, typename _T = std::remove_cv<T>::type>
 		void write_back(T* Indata, size_t offset, size_t count)
 		{
 			static_assert(!std::is_pointer<_T>::value, "type T must be not pointer");
@@ -120,12 +105,12 @@ namespace moon
 			static_assert(!std::is_pointer<_T>::value, "type T must be not pointer");
 			if (nullptr == Indata || 0 == count)
 				return;
-			
+
 			if (sizeof(_T)*count > m_readpos)
 			{
 				count = m_readpos / sizeof(_T);
 			}
-	
+
 			m_readpos -= sizeof(_T)*count;
 
 			auto* buff = (_T*)&m_data[m_readpos];
@@ -198,7 +183,7 @@ namespace moon
 
 		void clear()
 		{
-			m_readpos = m_writepos = m_headreserved = 0;
+			m_readpos = m_writepos;
 		}
 
 		std::vector<uint8_t>::iterator writeable()
@@ -223,7 +208,7 @@ namespace moon
 
 		void make_space(size_t len)
 		{
-			if (write_able_size() + m_readpos +m_headreserved < len)
+			if (write_able_size() + m_readpos < len)
 			{
 				size_t s = DEFAULT_CAPACITY;
 				while (s < m_writepos + len)
@@ -245,14 +230,13 @@ namespace moon
 		{
 			return m_data.begin();
 		}
+
 	protected:
 		std::vector<uint8_t>		m_data;
 		//read position
 		size_t								m_readpos;
 		//write position
 		size_t								m_writepos;
-		//head reserved size
-		size_t								m_headreserved;
 	};
 
 };

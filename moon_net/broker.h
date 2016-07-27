@@ -45,7 +45,7 @@ namespace moon
 		
 		virtual void	update(uint32_t interval);
 
-		void				send_socket_message(socket_id sockid, const buffer_ptr& data);
+		void				send_socket_message(socket_id sockid,const message& msg);
 
 	protected:
 		/**

@@ -29,13 +29,13 @@ namespace moon
 	class binary_writer
 	{
 	public:
-		explicit binary_writer(memory_stream_ptr& ms)
-			:m_ms(*ms)
+		explicit binary_writer(memory_stream& ms)
+			:m_ms(ms)
 		{
 		}
 
-		explicit binary_writer(memory_stream& ms)
-			:m_ms(ms)
+		explicit binary_writer(memory_stream* ms)
+			:m_ms(*ms)
 		{
 		}
 
@@ -92,11 +92,11 @@ namespace moon
 		void write(T* t, size_t count)
 		{
 			static_assert(std::is_pod<T>::value, "type T must be pod.");
-			m_ms.write_back(&t, 0, count);
+			m_ms.write_back(t, 0, count);
 		}
 
 		template<class T>
-		binary_writer& operator<<(T& value)
+		binary_writer& operator<<(T&& value)
 		{
 			write(value);
 			return *this;

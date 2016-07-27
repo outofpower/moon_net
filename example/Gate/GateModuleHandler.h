@@ -12,8 +12,8 @@ public:
 
 protected:
 	//服务器启动
-	void OnServerStart(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid);
+	void OnServerStart(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid);
 	//某个模块启动
-	void OnModuleStart(const user_id& userid,uint16_t msgID, buffer_reader& data,uint64_t echoid);
+	void OnModuleStart(const user_id& userid,uint16_t msgID, binary_reader& data,uint64_t echoid);
 };
 

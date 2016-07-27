@@ -81,7 +81,7 @@ public:
 	* @socketID 
 	* @buffer_ptr 数据
 	*/
-	void			send(socket_id socketID, const buffer_ptr& data);
+	void			send(socket_id socketID, const message& msg);
 
 	/**
 	* 关闭某个socket连接

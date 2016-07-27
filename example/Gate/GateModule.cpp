@@ -5,7 +5,7 @@
 #include "Connection.h"
 
 GateModule::GateModule(module_id moduleid)
-	:broker(moduleid),ModuleBases(this), m_Connections(nullptr)
+	:broker(moduleid),ModuleBase(this), m_Connections(nullptr)
 {
 	
 }
@@ -85,7 +85,7 @@ void GateModule::ForceCloseClient(socket_id sockid)
 
 void GateModule::ClientConnect(const message& msg)
 {
-	buffer_reader buf(msg.data(), msg.size());
+	binary_reader buf(msg.data(), msg.size());
 
 	std::string addr;
 	buf >> addr;
@@ -94,7 +94,7 @@ void GateModule::ClientConnect(const message& msg)
 
 void GateModule::ClientClose(const message& msg)
 {
-	buffer_reader buf(msg.data(), msg.size());
+	binary_reader buf(msg.data(), msg.size());
 
 	std::string addr;
 	buf >> addr;
@@ -216,7 +216,7 @@ void GateModule::ToClientData(const message& msg)
 		return;
 	}
 
-	send_socket_message(pconn->getsocket_id(), msg.msg_data());
+	send_socket_message(pconn->getsocket_id(), msg);
 }
 
 

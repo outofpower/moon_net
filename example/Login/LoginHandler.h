@@ -14,7 +14,7 @@ public:
 	void	OnClientClose(account_id accountID, player_id playerID) override;
 private:
 	//¿Í»§¶ËÇëÇóµÇÂ½
-	void OnRequestLogin(const user_id& userid, uint16_t msgID, buffer_reader& data,uint64_t echoid);
+	void OnRequestLogin(const user_id& userid, uint16_t msgID, binary_reader& data,uint64_t echoid);
 
 private:
 	AccountDataCache*  m_Accounts;

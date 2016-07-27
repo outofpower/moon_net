@@ -74,7 +74,7 @@
     <ClCompile Include="Login\LoginModule.cpp">
       <Filter>Logic\LoginModule</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleBases.cpp">
+    <ClCompile Include="ModuleBase.cpp">
       <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,9 +121,6 @@
     <ClInclude Include="MessageID.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleBases.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleBehaviour.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -132,6 +129,9 @@
     </ClInclude>
     <ClInclude Include="ServerLog.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBase.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

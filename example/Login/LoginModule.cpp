@@ -4,7 +4,7 @@
 #include "LoginHandler.h"
 
 LoginModule::LoginModule(module_id moduleid)
-	:actor(moduleid),ModuleBases(this), m_Accounts(nullptr)
+	:actor(moduleid),ModuleBase(this), m_Accounts(nullptr)
 {
 
 }
