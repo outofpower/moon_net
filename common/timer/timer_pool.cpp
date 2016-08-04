@@ -33,7 +33,7 @@ struct stimezone
 {
 };
 
-static int gettimeofday(timeval* val, stimezone*)
+static int64_t gettimeofday(timeval* val, stimezone*)
 {
 	if (val)
 	{
@@ -47,7 +47,7 @@ static int gettimeofday(timeval* val, stimezone*)
 }
 #endif
 
-static long getus(timeval t)
+static int64_t getus(timeval t)
 {
 	return(t.tv_sec * 1000000 + t.tv_usec);
 }
@@ -226,7 +226,6 @@ void timer_pool::expired(const std::vector<uint64_t>& timers)
 
 				if (tcx->getRepeatTimes() == -1)
 				{
-					printf("%u timer is repeat\r\n", tcx->getID());
 					addNewTimer(tcx);
 				}
 				else if (tcx->getRepeatTimes() > 0)
@@ -273,7 +272,7 @@ void timer_pool::addTimer(const timer_context_ptr& t)
 				key = makeKey(t->getID(), slots);
 				if (slot_count < wheel.size())
 				{
-					printf("timer_pool id %u add to wheel %d slot%d\r\n",t->getID(),  i + 1, slot);
+					//printf("timer_pool id %u add to wheel %d slot%d\r\n",t->getID(),  i + 1, slot);
 					wheel[slot].push_back(key);
 					break;
 				}
